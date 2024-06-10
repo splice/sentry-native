@@ -168,7 +168,10 @@ sentry__breakpad_backend_callback(
 #ifndef SENTRY_PLATFORM_WINDOWS
     sentry__leave_signal_handler();
 #endif
-    return succeeded;
+    // SPLICE: Always returning false here forces breakpad to reinstall the previous
+    // crash handlers. Without this change, it will handle the crash and exit immediately
+    // after handling the crash itself.
+    return false;
 }
 
 #ifdef SENTRY_PLATFORM_MACOS
